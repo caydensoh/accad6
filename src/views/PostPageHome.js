@@ -2,17 +2,18 @@ import { useEffect, useState } from "react";
 import { Container, Image, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
-// import { db } from "../firebase";
-// import SiteNav from "../templates/SiteNav";
 
 
 export default function PostPageHome() {
   return <h1>Home Page</h1>;
 //   const [posts, setPosts] = useState([]);
 //   async function getAllPosts() {
-//     const query = await getDocs(collection(db, "posts"));
-//     const posts = query.docs.map((doc) => {
-//       return { id: doc.id, ...doc.data() };
+//     const query = await fetch("API gateway here");
+//     if (!response.ok) {
+//        console.error("Failed to fetch posts:", response.statusText);
+//        return;
+//     }
+//     const posts = await query.json()
 //     });
 //     setPosts(posts);
 //   }

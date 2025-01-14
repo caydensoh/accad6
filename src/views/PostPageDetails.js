@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Card, Col, Container, Image, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import SiteNav from "../templates/SiteNav";
-// import { useAuthState } from "react-firebase-hooks/auth";
-// import { auth, db } from "../firebase";
-// import { deleteDoc, doc, getDoc } from "firebase/firestore";
 
 
 export default function PostPageDetails() {
@@ -13,7 +10,6 @@ export default function PostPageDetails() {
   // const [image, setImage] = useState("");
   // const params = useParams();
   // const id = params.id;
-  // const [user, loading] = useAuthState(auth);
   // const navigate = useNavigate();
 
   // async function deletePost(id) {
@@ -22,18 +18,17 @@ export default function PostPageDetails() {
   // }
 
   // async function getPost(id) {
-  //   const postDocument = await getDoc(doc(db, "posts", id));
-  //   const post = postDocument.data();
+  //   const postDocument = await fetch("API gateway here/{id}");
+  //   if (!response.ok) {
+  //      console.error("Failed to fetch posts:", response.statusText);
+  //      return;
+  //   }
+  //   const post = await postDocument.json();
   //   setCaption(post.caption);
   //   setImage(post.image);
   // }
 
   // useEffect(() => {
-
-  //   if (loading) return;
-  //   if (!user) navigate("/login");
-  //   getPost(id);
-  // }, [id, navigate, user, loading]);
 
   // return (
   //   <>

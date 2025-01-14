@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Container, Form, Image } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import SiteNav from "../templates/SiteNav";
-// import { useAuthState } from "react-firebase-hooks/auth";
-// import { auth, db, storage } from "../firebase";
-// import { doc, getDoc, updateDoc } from "firebase/firestore";
-// import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { S3 } from 'aws-sdk';
 
 export default function PostPageUpdate() {
   return <h1>update page</h1>;
@@ -14,28 +11,67 @@ export default function PostPageUpdate() {
   // const [caption, setCaption] = useState("");
   // const [image, setImage] = useState("");
   // const [previewImage, setPreviewImage] = useState("https://zca.sg/img/placeholder");
-  // const [user, loading] = useAuthState(auth);
   // const navigate = useNavigate();
 
   // async function updatePost() {
   //   let imageUrl = "";
-  //   if (image.name) {
-  //     const imageReference = ref(storage, `images/${image.name}`);
-  //     const response = await uploadBytes(imageReference, image);
-  //     imageUrl = await getDownloadURL(response.ref);
+    
+  //   if (image && image.name) {
+  //       const s3 = new S3();
+  //       const imageKey = `images/${image.name}`;
+
+  //       // Upload the image to S3
+  //       const uploadParams = {
+  //           Bucket: 'your-bucket-name',  // Replace with your S3 bucket name
+  //           Key: imageKey,
+  //           Body: image,  // The image file to upload
+  //           ContentType: image.type  // Optional: Set the content type
+  //       };
+
+  //       try {
+  //           // Upload the image
+  //           const s3Response = await s3.upload(uploadParams).promise();
+  //           imageUrl = s3Response.Location;  // Get the URL of the uploaded image
+  //       } catch (error) {
+  //           console.error("Error uploading image to S3:", error);
+  //           return;
+  //       }
   //   } else {
-  //     imageUrl = image;
+  //       imageUrl = image;  // If there's no new image, use the existing image URL
   //   }
-  //   await updateDoc(doc(db, "posts", id), { caption, image: imageUrl });
-  //   navigate("/");
+
+  //   // Now, update the post in DynamoDB with the new caption and image URL
+  //   const dynamoDB = new AWS.DynamoDB.DocumentClient();
+
+  //   const params = {
+  //       TableName: 'PostsTable',  // Replace with your DynamoDB table name
+  //       Key: { id: id },  // The primary key to find the post
+  //       UpdateExpression: 'set caption = :caption, image = :image',
+  //       ExpressionAttributeValues: {
+  //           ':caption': caption,  // New caption
+  //           ':image': imageUrl,   // New image URL
+  //       },
+  //       ReturnValues: 'UPDATED_NEW'
+  //   };
+
+  //   try {
+  //       // Update the post in DynamoDB
+  //       await dynamoDB.update(params).promise();
+  //       navigate('/');  // Redirect after the update
+  //   } catch (error) {
+  //       console.error("Error updating post in DynamoDB:", error);
+  //   }
   // }
 
   // async function getPost(id) {
-  //   const postDocument = await getDoc(doc(db, "posts", id));
-  //   const post = postDocument.data();
+  //   const postDocument = await fetch("API gateway here/{id}");
+  //   if (!response.ok) {
+  //      console.error("Failed to fetch posts:", response.statusText);
+  //      return;
+  //   }
+  //   const post = await postDocument.json();
   //   setCaption(post.caption);
   //   setImage(post.image);
-  //   setPreviewImage(post.image);
   // }
 
   // useEffect(() => {

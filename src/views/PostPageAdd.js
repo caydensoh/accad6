@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Container, Image, Form} from "react-bootstrap";
 import SiteNav from "../templates/SiteNav";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function PostPageAdd() {
   const [newBook, setNewBook] = useState({

@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 export default function PostPageDetails() {
-  const { bookId } = useParams();
+  const location = useLocation(); // Access location state
   const [book, setBook] = useState(null);
+  
+  const { bookId } = location.state || {}; // Get the bookId from location.state
 
   useEffect(() => {
     async function getBookDetails() {
       try {
-        const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-singleton/${bookId}`);
+        const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-singleton?book_id=${bookId}`);
         const data = await response.json();
         setBook(data);
       } catch (error) {

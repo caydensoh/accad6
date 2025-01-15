@@ -1,33 +1,35 @@
 import { useState, useEffect } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function PostPageUpdate() {
-  const { bookId } = useParams(); 
+  const location = useLocation(); // Access location state
+  const navigate = useNavigate();
   
   const [book, setBook] = useState(null);
-  const [updateKey, setUpdateKey] = useState(""); // Key to update (author, title, etc.)
-  const [updateValue, setUpdateValue] = useState(""); // New value for the key
+  const [updateKey, setUpdateKey] = useState(""); 
+  const [updateValue, setUpdateValue] = useState(""); 
+
+  const { bookId } = location.state || {}; // Get the bookId from location.state
 
   useEffect(() => {
-    // Fetch the current book data using the bookId
     async function fetchBook() {
       try {
-        const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-singleton/${bookId}`);
+        const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-singleton?book_id=${bookId}`);
         if (!response.ok) {
           console.error("Failed to fetch book details:", response.statusText);
           return;
         }
         const data = await response.json();
-        setBook(data); // Assuming the response gives you the full book object
+        setBook(data);
       } catch (error) {
         console.error("Error fetching book:", error);
       }
     }
 
-    fetchBook();
+    if (bookId) fetchBook();  // Only fetch if bookId exists
+
   }, [bookId]);
 
-  // Handle the PATCH request to update the book
   async function handleUpdate() {
     try {
       const updateData = {
@@ -36,8 +38,8 @@ export default function PostPageUpdate() {
         updateValue: updateValue,
       };
 
-      const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-multiple`, {
-        method: 'PATCH', // Using PATCH method for partial updates
+      const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-singleton?book_id=${bookId}`, {
+        method: 'PATCH', 
         headers: {
           'Content-Type': 'application/json',
         },
@@ -46,7 +48,7 @@ export default function PostPageUpdate() {
 
       if (response.ok) {
         console.log("Book updated successfully!");
-        Navigate('/'); 
+        navigate('/'); // Redirect after successful update
       } else {
         console.error("Failed to update the book:", response.statusText);
       }
@@ -80,7 +82,7 @@ export default function PostPageUpdate() {
             onChange={(e) => setUpdateValue(e.target.value)} 
             placeholder={`Enter new value for ${updateKey}`}
             style={{
-              backgroundColor: '#f0f0f0', // Slight background color for the old value
+              backgroundColor: '#f0f0f0',
               backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500"><text x="10" y="30" font-family="Arial" font-size="20" fill="grey">${book[updateKey] || 'No current value'}</text></svg>')`,
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'right center',

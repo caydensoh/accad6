@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Container, Image, Form} from "react-bootstrap";
 import SiteNav from "../templates/SiteNav";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 
 

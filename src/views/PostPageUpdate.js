@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, Navigate } from 'react-router-dom';
 
 export default function PostPageUpdate() {
-  const { bookId } = useParams(); // Get the book ID from the URL
-  const history = useHistory();
+  const { bookId } = useParams(); 
   
   const [book, setBook] = useState(null);
   const [updateKey, setUpdateKey] = useState(""); // Key to update (author, title, etc.)
@@ -47,7 +46,7 @@ export default function PostPageUpdate() {
 
       if (response.ok) {
         console.log("Book updated successfully!");
-        history.push('/'); // Redirect to the home page after successful update
+        Navigate('/'); 
       } else {
         console.error("Failed to update the book:", response.statusText);
       }

@@ -16,7 +16,7 @@ export default function PostPageHome() {
       }
       const data = await response.json();
       console.log(data)
-      setBooks(data[book-multiple] || []); // Assuming "employees" is the root key
+      setBooks(data["book-multiple"] || []); 
     } catch (error) {
       console.error("Error fetching books:", error);
     }

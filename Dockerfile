@@ -15,7 +15,5 @@ COPY . .
 
 # Step 6: Build the app
 RUN npm run build
-FROM nginx:alpine
-COPY --from=build /app/build /usr/share/nginx/html
-EXPOSE 80  # ✅ Exposing port 80 for App Runner
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 8080
+CMD ["npm","start"]

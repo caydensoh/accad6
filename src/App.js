@@ -14,7 +14,7 @@ function App() {
   const router = createBrowserRouter([
     { path: "/", element: <PostPageHome /> },
     { path: "/add", element: <PostPageAdd /> },
-    { path: "/post/:id", element: <PostPageDetails /> },
+    { path: "/book/:id", element: <PostPageDetails /> },
     { path: "/update/:id", element: <PostPageUpdate /> }
   ]);
   

@@ -22,6 +22,21 @@ export default function PostPageHome() {
     }
   }
 
+  async function deleteBook(bookId) {
+    try {
+      const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book/${bookId}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setBooks(books.filter((book) => book.book_id !== bookId));
+      } else {
+        console.error("Failed to delete the book:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error deleting book:", error);
+    }
+  }
+
   useEffect(() => {
     getAllBooks();
   }, []);
@@ -33,9 +48,15 @@ export default function PostPageHome() {
         {books.map((book) => (
           <li key={book.book_id}>
             <strong>{book.title}</strong> by {book.author} ({book.published_year}) - {book.genre}
+            <div>
+              <Link to={`/book/${book.book_id}`}>View Details</Link> | 
+              <Link to={`/update/${book.book_id}`}>Update</Link> | 
+              <button onClick={() => deleteBook(book.book_id)}>Delete</button>
+            </div>
           </li>
         ))}
       </ul>
+      <Link to="/add">Add New Book</Link>
     </div>
   );
 }

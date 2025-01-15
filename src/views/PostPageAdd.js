@@ -1,75 +1,77 @@
 import React, { useEffect, useState } from "react";
 import { Button, Container, Image, Form} from "react-bootstrap";
 import SiteNav from "../templates/SiteNav";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate } from 'react-router-dom';
 
 export default function PostPageAdd() {
-  return <h1>add page</h1>;
-  // const [user, loading] = useAuthState(auth);
-  // const [caption, setCaption] = useState("");
-  // const [image, setImage] = useState("");
-  // const [previewImage, setPreviewImage] = useState(
-  //   "https://zca.sg/img/placeholder"
-  // );
-  // const navigate = useNavigate();
+  const [newBook, setNewBook] = useState({
+    title: '',
+    author: '',
+    published_year: '',
+    genre: '',
+  });
 
-  // async function addPost() {
-  //   const imageReference = ref(storage, `images/${image.name}`);
-  //   const response = await uploadBytes(imageReference, image);
-  //   const imageUrl = await getDownloadURL(response.ref);
-  //   await addDoc(collection(db, "posts"), { caption, image: imageUrl });
-  //   navigate("/");
-  // }
+  const navigate = useNavigate();
 
+  async function handleAdd() {
+    try {
+      const response = await fetch('https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-singleton', {
+        method: 'POST',
+        body: JSON.stringify(newBook),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (response.ok) {
+        navigate('/');
+      } else {
+        console.error("Failed to add the book:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error adding book:", error);
+    }
+  }
 
-  // useEffect(() => {
-  //   if (loading) return;
-  //   if (!user) return navigate("/login");
-  // }, [navigate, user, loading]);
-
-  // return (
-  //   <>
-  //     <SiteNav/>
-  //     <Container>
-  //       <h1 style={{ marginBlock: "1rem" }}>Add Post</h1>
-  //       <Form>
-  //         <Form.Group className="mb-3" controlId="caption">
-  //           <Form.Label>Caption</Form.Label>
-  //           <Form.Control
-  //             type="text"
-  //             placeholder="Lovely day"
-  //             value={caption}
-  //             onChange={(text) => setCaption(text.target.value)}
-  //           />
-  //         </Form.Group>
-  //         <Image
-  //           src={previewImage}
-  //           style={{
-  //             objectFit: "cover",
-  //             width: "10rem",
-  //             height: "10rem",
-  //           }}
-  //         />
-
-  //         <Form.Group className="mb-3" controlId="image">
-  //           <Form.Label>Image</Form.Label>
-  //           <Form.Control
-  //             type="file"
-  //             onChange={(e) => {
-  //               const imageFile = e.target.files[0];
-  //               const previewImage = URL.createObjectURL(imageFile);
-  //               setImage(imageFile);
-  //               setPreviewImage(previewImage);
-  //             }}
-
-  //           />
-  //         </Form.Group>
-  //         <Button variant="primary" onClick={async (e) => addPost()}>
-  //           Submit
-  //         </Button>
-  //       </Form>
-  //     </Container>
-  //   </>
-  // );
+  return (
+    <div>
+      <h1>Add New Book</h1>
+      <form onSubmit={(e) => e.preventDefault()}>
+        <label>
+          Title:
+          <input
+            type="text"
+            value={newBook.title}
+            onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
+          />
+        </label>
+        <br />
+        <label>
+          Author:
+          <input
+            type="text"
+            value={newBook.author}
+            onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
+          />
+        </label>
+        <br />
+        <label>
+          Published Year:
+          <input
+            type="text"
+            value={newBook.published_year}
+            onChange={(e) => setNewBook({ ...newBook, published_year: e.target.value })}
+          />
+        </label>
+        <br />
+        <label>
+          Genre:
+          <input
+            type="text"
+            value={newBook.genre}
+            onChange={(e) => setNewBook({ ...newBook, genre: e.target.value })}
+          />
+        </label>
+        <br />
+        <button onClick={handleAdd}>Add Book</button>
+      </form>
+    </div>
+  );
 }

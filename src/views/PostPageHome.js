@@ -1,20 +1,52 @@
 import { useEffect, useState } from "react";
 import { Container, Image, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { collection, getDocs } from "firebase/firestore";
+import SiteNav from "../templates/SiteNav";
 
 
 export default function PostPageHome() {
-  return <h1>Home Page</h1>;
+  const [books, setBooks] = useState([]);
+
+  async function getAllBooks() {
+    try {
+      const response = await fetch("https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-multiple");
+      if (!response.ok) {
+        console.error("Failed to fetch books:", response.statusText);
+        return;
+      }
+      const data = await response.json();
+      setBooks(data.employees || []); // Assuming "employees" is the root key
+    } catch (error) {
+      console.error("Error fetching books:", error);
+    }
+  }
+
+  useEffect(() => {
+    getAllBooks();
+  }, []);
+
+  return (
+    <div>
+      <h1>Book List</h1>
+      <ul>
+        {books.map((book) => (
+          <li key={book.book_id}>
+            <strong>{book.title}</strong> by {book.author} ({book.published_year}) - {book.genre}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 //   const [posts, setPosts] = useState([]);
 //   async function getAllPosts() {
-//     const query = await fetch("API gateway here");
-//     if (!response.ok) {
-//        console.error("Failed to fetch posts:", response.statusText);
+//     const query = await fetch("https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-multiple");
+//     if (!query.ok) {
+//        console.error("Failed to fetch posts:", query.statusText);
 //        return;
 //     }
 //     const posts = await query.json()
-//     });
 //     setPosts(posts);
 //   }
 
@@ -25,10 +57,10 @@ export default function PostPageHome() {
 //   const ImagesRow = () => {
 //     return posts.map((post, index) => <ImageSquare key={index} post={post} />);
 //   };
-
+// // <SiteNav/>
 //   return (
 //     <>
-//       <SiteNav/>
+      
 //       <Container>
 //         <Row>
 //           <ImagesRow />
@@ -59,4 +91,4 @@ export default function PostPageHome() {
 //       />
 //     </Link>
 //   );
-}
+//}

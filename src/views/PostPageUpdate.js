@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Button, Container, Form, Image } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import SiteNav from "../templates/SiteNav";
-import { S3 } from 'aws-sdk';
 
 export default function PostPageUpdate() {
   return <h1>update page</h1>;

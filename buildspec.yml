@@ -1,0 +1,14 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: latest
+    commands:
+      # If needed, you can add commands for dependency installation
+  build:
+    commands:
+      - echo "Build completed on `date`"
+artifacts:
+  files:
+    - '**/*'
+  base-directory: .

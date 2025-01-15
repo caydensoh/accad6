@@ -10,6 +10,8 @@ phases:
 
   build:
     commands:
+      - echo Logging into Docker...
+      - docker login --username sohrongsheng --password Password1234
       - echo Building Docker image...
       - docker build -t accad5-assessment:latest .
       - docker tag accad5-assessment:latest 472190549422.dkr.ecr.ap-southeast-1.amazonaws.com/test-project/accad6

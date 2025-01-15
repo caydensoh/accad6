@@ -23,7 +23,7 @@ export default function PostPageHome() {
 
   async function deleteBook(bookId) {
     try {
-      const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book/${bookId}`, {
+      const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-singleton?book_id=${bookId}`, {
         method: 'DELETE',
       });
       if (response.ok) {

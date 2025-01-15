@@ -16,14 +16,6 @@ COPY . .
 # Step 6: Build the app
 RUN npm run build
 
-# Step 7: Use a lightweight web server to serve the app
-FROM nginx:alpine
+# Step 9: Expose the port
 
-# Step 8: Copy the build output from the previous step into the Nginx server directory
-COPY --from=build /app/build /usr/share/nginx/html
-
-# Step 9: Expose the port that Nginx will use
-EXPOSE 80
-
-# Step 10: Start the Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 3000

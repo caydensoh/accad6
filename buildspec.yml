@@ -1,14 +1,28 @@
 version: 0.2
+
 phases:
   install:
-    runtime-versions:
-      nodejs: latest
     commands:
-      # If needed, you can add commands for dependency installation
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 472190549422.dkr.ecr.ap-southeast-1.amazonaws.com
+      - echo Installing Dependencies...
+      - npm install
+  pre_build:
+    commands:
+      - echo Running Tests...
+      - npm test
+
   build:
     commands:
-      - echo "Build completed on `date`"
+      - echo Building Docker image...
+      - docker build -t accad5-assessment:latest .
+      - docker tag accad5-assessment:latest 472190549422.dkr.ecr.ap-southeast-1.amazonaws.com/test-project/accad6
+  post_build:
+    commands:
+      - echo Pushing Docker image to ECR...
+      - docker push 472190549422.dkr.ecr.ap-southeast-1.amazonaws.com/test-project/accad6
+
 artifacts:
   files:
-    - '**/*'
-  base-directory: .
+    - "**/*"
+  discard-paths: yes

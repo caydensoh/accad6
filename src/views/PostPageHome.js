@@ -9,12 +9,16 @@ export default function PostPageHome() {
 
   async function getAllBooks() {
     try {
+      console.log('this is');
+      //fetch('https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-multiple').then(response => response.json()).then(data => console.log(data));
       const response = await fetch("https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-multiple");
+      console.log("weird");
       if (!response.ok) {
         console.error("Failed to fetch books:", response.statusText);
         return;
       }
       const data = await response.json();
+      console.log(data)
       setBooks(data.employees || []); // Assuming "employees" is the root key
     } catch (error) {
       console.error("Error fetching books:", error);

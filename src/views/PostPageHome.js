@@ -23,14 +23,19 @@ export default function PostPageHome() {
 
   async function deleteBook(bookId) {
     try {
-      const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-singleton?book_id=${bookId}`, {
-        method: 'DELETE',
+      const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-singleton`, {
+        method: 'PATCH', 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bookId),
       });
       if (response.ok) {
         setBooks(books.filter((book) => book.book_id !== bookId));
       } else {
         console.error("Failed to delete the book:", response.statusText);
       }
+      body
     } catch (error) {
       console.error("Error deleting book:", error);
     }

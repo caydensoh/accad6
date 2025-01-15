@@ -1,59 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { Card, Col, Container, Image, Row } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
-import SiteNav from "../templates/SiteNav";
-
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 export default function PostPageDetails() {
-  return <h1>page details</h1>;
-  // const [caption, setCaption] = useState("");
-  // const [image, setImage] = useState("");
-  // const params = useParams();
-  // const id = params.id;
-  // const navigate = useNavigate();
+  const { bookId } = useParams();
+  const [book, setBook] = useState(null);
 
-  // async function deletePost(id) {
-  //   await deleteDoc(doc(db, "posts", id));
-  //   navigate("/");
-  // }
+  useEffect(() => {
+    async function getBookDetails() {
+      try {
+        const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-singleton/${bookId}`);
+        const data = await response.json();
+        setBook(data);
+      } catch (error) {
+        console.error("Error fetching book details:", error);
+      }
+    }
 
-  // async function getPost(id) {
-  //   const postDocument = await fetch("API gateway here/{id}");
-  //   if (!response.ok) {
-  //      console.error("Failed to fetch posts:", response.statusText);
-  //      return;
-  //   }
-  //   const post = await postDocument.json();
-  //   setCaption(post.caption);
-  //   setImage(post.image);
-  // }
+    getBookDetails();
+  }, [bookId]);
 
-  // useEffect(() => {
+  if (!book) {
+    return <div>Loading...</div>;
+  }
 
-  // return (
-  //   <>
-  //     <SiteNav/>
-  //     <Container>
-  //       <Row style={{ marginTop: "2rem" }}>
-  //         <Col md="6">
-  //           <Image src={image} style={{ width: "100%" }} />
-  //         </Col>
-  //         <Col>
-  //           <Card>
-  //             <Card.Body>
-  //               <Card.Text>{caption}</Card.Text>
-  //               <Card.Link href={`/update/${id}`}>Edit</Card.Link>
-  //               <Card.Link
-  //                 onClick={() => deletePost(id)}
-  //                 style={{ cursor: "pointer" }}
-  //               >
-  //                 Delete
-  //               </Card.Link>
-  //             </Card.Body>
-  //           </Card>
-  //         </Col>
-  //       </Row>
-  //     </Container>
-  //   </>
-  // );
+  return (
+    <div>
+      <h1>{book.title}</h1>
+      <p><strong>Author:</strong> {book.author}</p>
+      <p><strong>Published Year:</strong> {book.published_year}</p>
+      <p><strong>Genre:</strong> {book.genre}</p>
+      <Link to="/">Back to Book List</Link>
+    </div>
+  );
 }

@@ -1,41 +1,53 @@
-import React, { useEffect, useState } from "react";
-import { Button, Container, Form, Image } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
-import SiteNav from "../templates/SiteNav";
+import { useState, useEffect } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 
 export default function PostPageUpdate() {
-  const { bookId } = useParams();
-  const navigate = useNavigate();
-  const [book, setBook] = useState({
-    title: '',
-    author: '',
-    published_year: '',
-    genre: '',
-  });
+  const { bookId } = useParams(); // Get the book ID from the URL
+  const history = useHistory();
+  
+  const [book, setBook] = useState(null);
+  const [updateKey, setUpdateKey] = useState(""); // Key to update (author, title, etc.)
+  const [updateValue, setUpdateValue] = useState(""); // New value for the key
 
   useEffect(() => {
-    async function getBookDetails() {
+    // Fetch the current book data using the bookId
+    async function fetchBook() {
       try {
-        const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book/${bookId}`);
+        const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-singleton/${bookId}`);
+        if (!response.ok) {
+          console.error("Failed to fetch book details:", response.statusText);
+          return;
+        }
         const data = await response.json();
-        setBook(data);
+        setBook(data); // Assuming the response gives you the full book object
       } catch (error) {
-        console.error("Error fetching book details:", error);
+        console.error("Error fetching book:", error);
       }
     }
 
-    getBookDetails();
+    fetchBook();
   }, [bookId]);
 
+  // Handle the PATCH request to update the book
   async function handleUpdate() {
     try {
-      const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book/${bookId}`, {
-        method: 'PUT',
-        body: JSON.stringify(book),
-        headers: { 'Content-Type': 'application/json' },
+      const updateData = {
+        book_id: bookId,
+        updateKey: updateKey,
+        updateValue: updateValue,
+      };
+
+      const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-multiple`, {
+        method: 'PATCH', // Using PATCH method for partial updates
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData),
       });
+
       if (response.ok) {
-        navigate(`/book/${bookId}`);
+        console.log("Book updated successfully!");
+        history.push('/'); // Redirect to the home page after successful update
       } else {
         console.error("Failed to update the book:", response.statusText);
       }
@@ -44,48 +56,41 @@ export default function PostPageUpdate() {
     }
   }
 
+  if (!book) return <div>Loading...</div>;
+
   return (
     <div>
-      <h1>Update Book</h1>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <h1>Update Book: {book.title}</h1>
+      <div>
         <label>
-          Title:
-          <input
-            type="text"
-            value={book.title}
-            onChange={(e) => setBook({ ...book, title: e.target.value })}
+          Update Key (Field to update):
+          <input 
+            type="text" 
+            value={updateKey} 
+            onChange={(e) => setUpdateKey(e.target.value)} 
+            placeholder="e.g., author, title" 
           />
         </label>
-        <br />
+      </div>
+      <div>
         <label>
-          Author:
-          <input
-            type="text"
-            value={book.author}
-            onChange={(e) => setBook({ ...book, author: e.target.value })}
+          New Value:
+          <input 
+            type="text" 
+            value={updateValue} 
+            onChange={(e) => setUpdateValue(e.target.value)} 
+            placeholder={`Enter new value for ${updateKey}`}
+            style={{
+              backgroundColor: '#f0f0f0', // Slight background color for the old value
+              backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500"><text x="10" y="30" font-family="Arial" font-size="20" fill="grey">${book[updateKey] || 'No current value'}</text></svg>')`,
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'right center',
+              backgroundSize: 'auto 90%',
+            }}
           />
         </label>
-        <br />
-        <label>
-          Published Year:
-          <input
-            type="text"
-            value={book.published_year}
-            onChange={(e) => setBook({ ...book, published_year: e.target.value })}
-          />
-        </label>
-        <br />
-        <label>
-          Genre:
-          <input
-            type="text"
-            value={book.genre}
-            onChange={(e) => setBook({ ...book, genre: e.target.value })}
-          />
-        </label>
-        <br />
-        <button onClick={handleUpdate}>Update Book</button>
-      </form>
+      </div>
+      <button onClick={handleUpdate}>Update Book</button>
     </div>
   );
 }

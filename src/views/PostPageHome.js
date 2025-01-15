@@ -11,7 +11,14 @@ export default function PostPageHome() {
     try {
       console.log('this is');
       //fetch('https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-multiple').then(response => response.json()).then(data => console.log(data));
-      const response = await fetch("https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-multiple");
+      const response = await fetch("https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-multiple", {
+        method: 'GET',  // or POST, PUT, DELETE, etc.
+        headers: {
+            'Content-Type': 'application/json',
+            // Any other custom headers here
+        },
+        mode: 'cors',  // Ensures CORS headers are included in the request
+        });
       console.log("weird");
       if (!response.ok) {
         console.error("Failed to fetch books:", response.statusText);

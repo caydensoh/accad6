@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Button, Container, Image, Form} from "react-bootstrap";
-import SiteNav from "../templates/SiteNav";
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 export default function PostPageAdd() {
   const [newBook, setNewBook] = useState({
@@ -11,28 +9,37 @@ export default function PostPageAdd() {
     genre: '',
   });
 
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   async function handleAdd() {
     try {
-      const response = await fetch('https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-singleton', {
+      console.log(newBook)
+      const response = await fetch('https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-multiple', {
         method: 'POST',
-        body: JSON.stringify(newBook),
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newBook), // Ensure no 'book_id' is included
       });
+
       if (response.ok) {
-        navigate('/');
+        const data = await response.json(); // Get the response body
+        console.log("Book added successfully:", data);
+        navigate('/'); // Redirect after success
       } else {
-        console.error("Failed to add the book:", response.statusText);
+        const errorText = await response.text();
+        console.error("Failed to add the book:", errorText);
+        setError("Failed to add book: " + errorText);
       }
     } catch (error) {
       console.error("Error adding book:", error);
+      setError("Error adding book. Please try again.");
     }
   }
 
   return (
     <div>
       <h1>Add New Book</h1>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={(e) => e.preventDefault()}>
         <label>
           Title:

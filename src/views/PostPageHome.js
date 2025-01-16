@@ -23,19 +23,19 @@ export default function PostPageHome() {
 
   async function deleteBook(bookId) {
     try {
+      console.log(bookId);
       const response = await fetch(`https://7pr3rszc92.execute-api.ap-southeast-1.amazonaws.com/book-production/book-singleton`, {
-        method: 'PATCH', 
+        method: 'DELETE', 
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(bookId),
+        body: JSON.stringify({'book_id':bookId}),
       });
       if (response.ok) {
         setBooks(books.filter((book) => book.book_id !== bookId));
       } else {
         console.error("Failed to delete the book:", response.statusText);
       }
-      body
     } catch (error) {
       console.error("Error deleting book:", error);
     }
@@ -57,7 +57,7 @@ export default function PostPageHome() {
               <Link to={`/book/${book.book_id}`} state={{ bookId: book.book_id }}>View Details</Link> | 
               <Link to={`/update/${book.book_id}`} state={{ bookId: book.book_id }}  // Pass the bookId in the state
                     > Update </Link> | 
-              <button onClick={() => deleteBook(book.book_id)}>Delete</button>
+              <button onClick={() => deleteBook(book.book_id)} state={{ bookId: book.book_id }}>Delete</button>
             </div>
           </li>
         ))}
